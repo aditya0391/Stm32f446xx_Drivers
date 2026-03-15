@@ -9,11 +9,22 @@
 #ifndef INC_STM32F446XX_H_
 #define INC_STM32F446XX_H_
 
+/*
+ * Generic Macros
+ */
+
+#define ENABLE             1
+#define DISABLE            0
+#define SET                ENABLE
+#define RESET              DISABLE
+#define GPIO_PIN_SET       SET
+#define GPIO_PIN_RESET     RESET
 
 /*BASEADDR Addresses of Flash and SRAM Memory*/
 
 #include <stdint.h>
 #include <stdlib.h>
+
 
 #define FLASH_BASEADDR        0x08000000U  /* Flash BASEADDR Address*/
 #define SRAM1_BASEADDR        0x20000000U  /* SRAM1 BASEADDR Address 112KB*/
@@ -24,9 +35,9 @@
 #define SRAM                  SRAM1_BASEADDR
 
 
-/*AHBx and APBx Bus Peripherel BASEADDR addresses */
+/*AHBx and APBx Bus Peripheral BASEADDR addresses */
 
-#define PERIPH_BASEADDR           0x40000000U  /*Peripherel BASEADDR Address*/
+#define PERIPH_BASEADDR           0x40000000U  /*Peripheral BASEADDR Address*/
 #define APB1PERIPH_BASEADDR       PERIPH_BASEADDR  /*APB1 BASEADDR Address*/
 #define APB2PERIPH_BASEADDR       0x40010000U  /*APB2 BASEADDR Address*/
 #define AHB1PERIPH_BASEADDR       0x40020000U  /*AHB1 BASEADDR Address*/
@@ -42,6 +53,9 @@
 #define GPIOE_BASEADDR        (AHB1PERIPH_BASEADDR + 0x1000)
 #define GPIOF_BASEADDR        (AHB1PERIPH_BASEADDR + 0x1400)
 #define GPIOG_BASEADDR        (AHB1PERIPH_BASEADDR + 0x1800)
+#define GPIOH_BASEADDR        (AHB1PERIPH_BASEADDR + 0x1C00)
+
+#define RCC_BASEADDR          (AHB1PERIPH_BASEADDR + 0x3800)
 
 /*BASEADDR Addresses of peripherals which are hanging on APB1 Bus */
 
@@ -85,12 +99,174 @@ typedef struct
 	volatile uint32_t AFR[2] ;          /*GPIO alternate function register, AFR[0]: GPIO alternate function low register, AFR[1]: GPIO alternate function high register*/
 }GPIO_RegDef_t;
 
-/*GPIO register structures can be used like below8
+/*GPIO register structures can be used like below
  *
  *    GPIO_RegDef_t *pGPIOA = (GPIO_RegDef_t*)GPIOA_BASEADDR;
       pGPIOA->MODER = 0x1 ;
       to minimize adding address, create macro
  **/
 
-#define GPIOA           (GPIO_RegDef_t*)GPIOA_BASEADDR
+typedef struct
+{
+	volatile uint32_t CR;             /*RCC clock control register*/
+	volatile uint32_t PLLCFGR;        /*RCC PLL configuration register*/
+	volatile uint32_t CFGR;           /*RCC clock configuration register*/
+	volatile uint32_t CIR;            /*RCC clock interrupt register*/
+	volatile uint32_t AHB1RSTR;       /*RCC AHB1 peripheral reset register*/
+	volatile uint32_t AHB2RSTR;       /*RCC AHB2 peripheral reset register*/
+	volatile uint32_t AHB3RSTR;       /*RCC AHB3 peripheral reset register*/
+	uint32_t RESERVED0;
+	volatile uint32_t APB1RSTR;       /*RCC APB1 peripheral reset register*/
+	volatile uint32_t APB2RSTR;       /*RCC APB2 peripheral reset register*/
+	uint32_t RESERVED1[2];
+	volatile uint32_t AHB1ENR;        /*RCC AHB1 peripheral clock enable register*/
+	volatile uint32_t AHB2ENR;        /*RCC AHB2 peripheral clock enable register*/
+	volatile uint32_t AHB3ENR;        /*RCC AHB3 peripheral clock enable register*/
+	uint32_t RESERVED2;
+	volatile uint32_t APB1ENR;        /*RCC APB1 peripheral clock enable register*/
+	volatile uint32_t APB2ENR;        /*RCC APB2 peripheral clock enable register*/
+	uint32_t RESERVED3[2];
+	volatile uint32_t AHB1LPENR;      /*RCC AHB1 peripheral clock enable in low power mode register*/
+	volatile uint32_t AHB2LPENR;      /*RCC AHB2 peripheral clock enable in low power mode register*/
+	volatile uint32_t AHB3LPENR;      /*RCC AHB3 peripheral clock enable in low power mode register*/
+	uint32_t RESERVED4;
+	volatile uint32_t APB1LPENR;      /*RCC APB1 peripheral clock enable in low power mode register*/
+	volatile uint32_t APB2LPENR;      /*RCC APB2 peripheral clock enable in low power mode register*/
+	uint32_t RESERVED5[2];
+	volatile uint32_t BDCR;           /*RCC Backup domain control register*/
+	volatile uint32_t CSR;            /*RCC clock control and status register*/
+	uint32_t RESERVED6[2];
+	volatile uint32_t SSCGR;          /*RCC spread spectrum clock generation register*/
+	volatile uint32_t PLLI2SCFGR;     /*RCC PLLI2S configuration register*/
+	volatile uint32_t PLLSAICFGR;     /*RCC PLL configuration register*/
+	volatile uint32_t DCKCFGR;        /*RCC dedicated clock configuration register*/
+	volatile uint32_t CKGATENR;           /*RCC clocks gated enable register*/
+	volatile uint32_t DCKCFGR2;           /*RCC dedicated clocks configuration register 2*/
+}RCC_RegDef_t;
+
+#define GPIOA           ((GPIO_RegDef_t*)GPIOA_BASEADDR)
+#define GPIOB           ((GPIO_RegDef_t*)GPIOB_BASEADDR)
+#define GPIOC           ((GPIO_RegDef_t*)GPIOC_BASEADDR)
+#define GPIOD           ((GPIO_RegDef_t*)GPIOD_BASEADDR)
+#define GPIOE           ((GPIO_RegDef_t*)GPIOE_BASEADDR)
+#define GPIOF           ((GPIO_RegDef_t*)GPIOF_BASEADDR)
+#define GPIOG           ((GPIO_RegDef_t*)GPIOG_BASEADDR)
+#define GPIOH           ((GPIO_RegDef_t*)GPIOH_BASEADDR)
+
+#define RCC_REG         ((RCC_RegDef_t*)RCC_BASEADDR)
+
+/*
+ *  Clock Enable Macros for GPIOx Peripheral
+ **/
+
+#define GPIOA_CLK_EN()      ( RCC_REG->AHB1ENR |= (1 << 0) )
+#define GPIOB_CLK_EN()      ( RCC_REG->AHB1ENR |= (1 << 1) )
+#define GPIOC_CLK_EN()      ( RCC_REG->AHB1ENR |= (1 << 2) )
+#define GPIOD_CLK_EN()      ( RCC_REG->AHB1ENR |= (1 << 3) )
+#define GPIOE_CLK_EN()      ( RCC_REG->AHB1ENR |= (1 << 4) )
+#define GPIOF_CLK_EN()      ( RCC_REG->AHB1ENR |= (1 << 5) )
+#define GPIOG_CLK_EN()      ( RCC_REG->AHB1ENR |= (1 << 6) )
+#define GPIOH_CLK_EN()      ( RCC_REG->AHB1ENR |= (1 << 7) )
+
+/*
+ *  Clock Disable Macros for GPIOx Peripheral
+ **/
+
+#define GPIOA_CLK_DIS()      ( RCC_REG->AHB1ENR &= ~(1 << 0) )
+#define GPIOB_CLK_DIS()      ( RCC_REG->AHB1ENR &= ~(1 << 1) )
+#define GPIOC_CLK_DIS()      ( RCC_REG->AHB1ENR &= ~(1 << 2) )
+#define GPIOD_CLK_DIS()      ( RCC_REG->AHB1ENR &= ~(1 << 3) )
+#define GPIOE_CLK_DIS()      ( RCC_REG->AHB1ENR &= ~(1 << 4) )
+#define GPIOF_CLK_DIS()      ( RCC_REG->AHB1ENR &= ~(1 << 5) )
+#define GPIOG_CLK_DIS()      ( RCC_REG->AHB1ENR &= ~(1 << 6) )
+#define GPIOH_CLK_DIS()      ( RCC_REG->AHB1ENR &= ~(1 << 7) )
+
+/*
+ *  Clock Enable Macros for SPIx Peripheral
+ */
+
+#define SPI2_CLK_EN()       ( RCC_REG->APB1ENR |= (1 << 14))
+#define SPI3_CLK_EN()       ( RCC_REG->APB1ENR |= (1 << 15))
+
+#define SPI1_CLK_EN()       ( RCC_REG->APB2ENR |= (1 << 12))
+#define SPI4_CLK_EN()       ( RCC_REG->APB2ENR |= (1 << 13))
+
+/*
+ *  Clock Disable Macros for SPIx Peripheral
+ */
+
+#define SPI2_CLK_DIS()       ( RCC_REG->APB1ENR &= ~(1 << 14))
+#define SPI3_CLK_DIS()       ( RCC_REG->APB1ENR &= ~(1 << 15))
+
+#define SPI1_CLK_DIS()       ( RCC_REG->APB2ENR &= ~(1 << 12))
+#define SPI4_CLK_DIS()       ( RCC_REG->APB2ENR &= ~(1 << 13))
+
+/*
+ *  Clock Enable Macros for I2Cx Peripheral
+ */
+
+#define I2C1_CLK_EN()       ( RCC_REG->APB1ENR |= (1 << 21))
+#define I2C2_CLK_EN()       ( RCC_REG->APB1ENR |= (1 << 22))
+#define I2C3_CLK_EN()       ( RCC_REG->APB1ENR |= (1 << 23))
+
+/*
+ *  Clock Disable Macros for I2Cx Peripheral
+ */
+
+#define I2C1_CLK_DIS()       ( RCC_REG->APB1ENR &= ~(1 << 21))
+#define I2C2_CLK_DIS()       ( RCC_REG->APB1ENR &= ~(1 << 22))
+#define I2C3_CLK_DIS()       ( RCC_REG->APB1ENR &= ~(1 << 23))
+
+/*
+ * Clock Enable Macros for USARTx Peripheral
+ */
+
+#define USART1_CLK_EN()     ( RCC_REG->APB2ENR |= (1 << 4))
+#define USART6_CLK_EN()     ( RCC_REG->APB2ENR |= (1 << 5))
+
+#define USART2_CLK_EN()     ( RCC_REG->APB1ENR |= (1 << 17))
+#define USART3_CLK_EN()     ( RCC_REG->APB1ENR |= (1 << 18))
+
+#define UART4_CLK_EN()      ( RCC_REG->APB1ENR |= (1 << 19))
+#define UART5_CLK_EN()      ( RCC_REG->APB1ENR |= (1 << 20))
+
+/*
+ * Clock Disable Macros for USARTx Peripheral
+ */
+
+#define USART1_CLK_DIS()     ( RCC_REG->APB2ENR &= ~(1 << 4))
+#define USART6_CLK_DIS()     ( RCC_REG->APB2ENR &= ~(1 << 5))
+
+#define USART2_CLK_DIS()     ( RCC_REG->APB1ENR &= ~(1 << 17))
+#define USART3_CLK_DIS()     ( RCC_REG->APB1ENR &= ~(1 << 18))
+
+#define UART4_CLK_DIS()      ( RCC_REG->APB1ENR &= ~(1 << 19))
+#define UART5_CLK_DIS()      ( RCC_REG->APB1ENR &= ~(1 << 20))
+
+/*
+ * Clock Enable Macros for SYSCFG peripheral
+ */
+
+#define SYSCFG_CLK_EN()     ( RCC_REG->APB1ENR |= (1 << 14))
+
+/*
+ * Clock Enable Macros for SYSCFG peripheral
+ */
+
+#define SYSCFG_CLK_DIS()     ( RCC_REG->APB1ENR &= ~(1 << 14))
+
+/*
+ * Register Reset needs to be set and then reset
+ * Here, First line: puts GPIOx into reset (all its registers return to default values).
+ * Second line: immediately releases GPIOx from reset so you can use it again.
+ */
+#define GPIOA_REG_RESET()    do{(RCC_REG->AHB1RSTR |= (1 << 0)); (RCC_REG->AHB1RSTR &= ~(1 << 0));} while(0)
+#define GPIOB_REG_RESET()    do{(RCC_REG->AHB1RSTR |= (1 << 1)); (RCC_REG->AHB1RSTR &= ~(1 << 1));} while(0)
+#define GPIOC_REG_RESET()    do{(RCC_REG->AHB1RSTR |= (1 << 2)); (RCC_REG->AHB1RSTR &= ~(1 << 2));} while(0)
+#define GPIOD_REG_RESET()    do{(RCC_REG->AHB1RSTR |= (1 << 3)); (RCC_REG->AHB1RSTR &= ~(1 << 3));} while(0)
+#define GPIOE_REG_RESET()    do{(RCC_REG->AHB1RSTR |= (1 << 4)); (RCC_REG->AHB1RSTR &= ~(1 << 4));} while(0)
+#define GPIOF_REG_RESET()    do{(RCC_REG->AHB1RSTR |= (1 << 5)); (RCC_REG->AHB1RSTR &= ~(1 << 5));} while(0)
+#define GPIOG_REG_RESET()    do{(RCC_REG->AHB1RSTR |= (1 << 6)); (RCC_REG->AHB1RSTR &= ~(1 << 6));} while(0)
+#define GPIOH_REG_RESET()    do{(RCC_REG->AHB1RSTR |= (1 << 7)); (RCC_REG->AHB1RSTR &= ~(1 << 7));} while(0)
+
 #endif /* INC_STM32F446XX_H_ */
