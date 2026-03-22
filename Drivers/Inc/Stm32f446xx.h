@@ -2,7 +2,7 @@
  * Stm32f446xx.h
  *
  *  Created on: Mar 11, 2026
- *      Author: Admin
+ *      Author: Aditya A Vilayatkar
  */
 
 
@@ -98,6 +98,28 @@ typedef struct
 	volatile uint32_t LCKR;             /*GPIO port configuration lock register*/
 	volatile uint32_t AFR[2] ;          /*GPIO alternate function register, AFR[0]: GPIO alternate function low register, AFR[1]: GPIO alternate function high register*/
 }GPIO_RegDef_t;
+
+
+typedef struct
+{
+	volatile uint32_t CR1;              /*SPI control register 1*/
+	volatile uint32_t CR2;              /*SPI control register 2*/
+	volatile uint32_t SR;               /*SPI status register*/
+	volatile uint32_t DR;               /*SPI data register*/
+	volatile uint32_t CRCPR;            /*SPI CRC polynomial register*/
+	volatile uint32_t RXCRCR;           /*SPI RX CRC register*/
+	volatile uint32_t TXCRCR;           /*SPI TX CRC register*/
+	volatile uint32_t I2SCFGR;          /*SPI_I2S configuration register*/
+	volatile uint32_t I2SPR;            /*SPI_I2S Prescaler register*/
+}SPI_RegDef_t;
+
+
+/*SPI Registers*/
+#define SPI1    ((SPI_RegDef_t*) SPI1_BASEADDR)
+#define SPI2    ((SPI_RegDef_t*) SPI2_BASEADDR)
+#define SPI3    ((SPI_RegDef_t*) SPI3_BASEADDR)
+#define SPI4    ((SPI_RegDef_t*) SPI4_BASEADDR)
+
 
 /*GPIO register structures can be used like below
  *
@@ -268,5 +290,18 @@ typedef struct
 #define GPIOF_REG_RESET()    do{(RCC_REG->AHB1RSTR |= (1 << 5)); (RCC_REG->AHB1RSTR &= ~(1 << 5));} while(0)
 #define GPIOG_REG_RESET()    do{(RCC_REG->AHB1RSTR |= (1 << 6)); (RCC_REG->AHB1RSTR &= ~(1 << 6));} while(0)
 #define GPIOH_REG_RESET()    do{(RCC_REG->AHB1RSTR |= (1 << 7)); (RCC_REG->AHB1RSTR &= ~(1 << 7));} while(0)
+
+/*
+ * BIT position definitions of SPI peripheral
+ */
+
+#define SPI_CR1_CPHA     0
+#define SPI_CR1_CPOL     1
+#define SPI_CR1_MSTR     2
+#define SPI_CR1_RXONLY   10
+#define SPI_CR1_DFF      11
+#define SPI_CR1_BIDI     15
+#define SPI_CR1_BR       3
+
 
 #endif /* INC_STM32F446XX_H_ */
