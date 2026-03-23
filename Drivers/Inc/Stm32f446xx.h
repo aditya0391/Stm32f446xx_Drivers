@@ -19,6 +19,8 @@
 #define RESET              DISABLE
 #define GPIO_PIN_SET       SET
 #define GPIO_PIN_RESET     RESET
+#define FLAG_SET           SET
+#define FLAG_RESET         RESET
 
 /*BASEADDR Addresses of Flash and SRAM Memory*/
 
@@ -302,6 +304,16 @@ typedef struct
 #define SPI_CR1_DFF      11
 #define SPI_CR1_BIDI     15
 #define SPI_CR1_BR       3
+
+/*
+ * BIT Position definition of SPI SR Register
+ */
+
+
+#define SPI_SR_RXNE       0
+#define SPI_SR_TXE        1
+#define SPI_CHSIDE        2
+#define SPI_UDR           3
 
 
 #endif /* INC_STM32F446XX_H_ */

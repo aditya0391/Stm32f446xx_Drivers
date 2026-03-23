@@ -76,6 +76,12 @@ typedef struct
 #define SPI_SSM_DISABLE   0
 
 /*
+ * SPI Related Status Flag definitions
+ */
+#define SPI_TXE_FLAG     (1 << SPI_SR_TXE)
+#define SPI_RXNE_FLAG    (1 << SPI_SR_RXNE)
+
+/*
  * Peripheral Clock Setup
  */
 void SPI_PeriClkCtrl(SPI_RegDef_t *pSPIx, uint8_t status);
