@@ -9,6 +9,38 @@
 #ifndef INC_STM32F446XX_H_
 #define INC_STM32F446XX_H_
 
+/*****************************START: Processor Specific Details******************************/
+/*
+ * ARM CORTEX Mx Processor NVIC ISERx Register Addresses
+ */
+
+#define NVIC_ISER0              ( (volatile uint32_t*)0xE000E100 )
+#define NVIC_ISER1              ( (volatile uint32_t*)0xE000E104 )
+#define NVIC_ISER2              ( (volatile uint32_t*)0xE000E108 )
+#define NVIC_ISER3              ( (volatile uint32_t*)0xE000E10C )
+
+/*
+ * ARM CORTEX Mx Processor NVIC ICERx Register Addresses
+ */
+
+#define NVIC_ICER0              ( (volatile uint32_t*)0xE000E180 )
+#define NVIC_ICER1              ( (volatile uint32_t*)0xE000E184 )
+#define NVIC_ICER2              ( (volatile uint32_t*)0xE000E188 )
+#define NVIC_ICER3              ( (volatile uint32_t*)0xE000E18C )
+
+/*
+ * ARM CORTEX Mx Processor NVIC IPRx Register Addresses
+ */
+
+#define NVIC_IPR                ( (volatile uint32_t*)0xE000E400 )
+
+/*
+ * ARM CORTEX Mx Processor Number of Priority bits implemented in priority register
+ */
+
+#define NO_PR_BITS_IMPLEMENTED        4
+
+/*****************************END: Processor Specific Details******************************/
 /*
  * Generic Macros
  */
@@ -168,6 +200,35 @@ typedef struct
 	volatile uint32_t DCKCFGR2;           /*RCC dedicated clocks configuration register 2*/
 }RCC_RegDef_t;
 
+/*
+ * EXTI peripheral Register structure
+ */
+
+typedef struct
+{
+	volatile uint32_t IMR;
+	volatile uint32_t EMR;
+	volatile uint32_t RTSR;
+	volatile uint32_t FTSR;
+	volatile uint32_t SWIER;
+	volatile uint32_t PR;
+}EXTI_RegDef_t;
+
+/*
+ * SYSCFG peripheral Register structure
+ */
+
+typedef struct
+{
+	volatile uint32_t MEMRMP;
+	volatile uint32_t PMC;
+	volatile uint32_t EXTICR[4];
+	volatile uint32_t CMPCR;
+	volatile uint32_t CFGR;
+}SYSCFG_RegDef_t;
+
+
+
 #define GPIOA           ((GPIO_RegDef_t*)GPIOA_BASEADDR)
 #define GPIOB           ((GPIO_RegDef_t*)GPIOB_BASEADDR)
 #define GPIOC           ((GPIO_RegDef_t*)GPIOC_BASEADDR)
@@ -178,6 +239,10 @@ typedef struct
 #define GPIOH           ((GPIO_RegDef_t*)GPIOH_BASEADDR)
 
 #define RCC_REG         ((RCC_RegDef_t*)RCC_BASEADDR)
+
+#define EXTI            ((EXTI_RegDef_t*)EXTI_BASEADDR)
+
+#define SYSCFG          ((SYSCFG_RegDef_t*)SYSCFG_BASEADDR)
 
 /*
  *  Clock Enable Macros for GPIOx Peripheral
@@ -191,6 +256,44 @@ typedef struct
 #define GPIOF_CLK_EN()      ( RCC_REG->AHB1ENR |= (1 << 5) )
 #define GPIOG_CLK_EN()      ( RCC_REG->AHB1ENR |= (1 << 6) )
 #define GPIOH_CLK_EN()      ( RCC_REG->AHB1ENR |= (1 << 7) )
+
+/*
+ * Returns port code for given GPIOx port base address
+ */
+
+#define GPIOxPORT(x)        ( (x == GPIOA)? 0 : \
+		                      (x == GPIOB)? 1 : \
+		                      (x == GPIOC)? 2 : \
+		                      (x == GPIOD)? 3 : \
+		                      (x == GPIOE)? 4 : \
+		                      (x == GPIOF)? 5 : \
+		                      (x == GPIOG)? 6 : \
+		                      (x == GPIOH)? 7 : 0 )
+
+
+/*
+ * IRQ Numbers for EXTI Lines
+ */
+
+#define IRQ_NUMBER_EXTI0         6
+#define IRQ_NUMBER_EXTI1         7
+#define IRQ_NUMBER_EXTI2         8
+#define IRQ_NUMBER_EXTI3         9
+#define IRQ_NUMBER_EXTI4         10
+#define IRQ_NUMBER_EXTI9_5       23
+#define IRQ_NUMBER_EXTI15_10     40
+
+/*
+ * IRQ Priority for EXTI Lines
+ */
+
+#define IRQ_PRIORITY_EXTI0         13
+#define IRQ_PRIORITY_EXTI1         14
+#define IRQ_PRIORITY_EXTI2         15
+#define IRQ_PRIORITY_EXTI3         16
+#define IRQ_PRIORITY_EXTI4         17
+#define IRQ_PRIORITY_EXTI9_5       30
+#define IRQ_PRIORITY_EXTI15_10     47
 
 /*
  *  Clock Disable Macros for GPIOx Peripheral

@@ -120,7 +120,8 @@ void GPIO_ToggleOutputPin(GPIO_RegDef_t *pGPIOx, uint8_t PinNumber);
 /*
  * IRQ Configuration and ISR Handling
  */
-void GPIO_IRQConfig(uint8_t IRQ_Number, uint8_t IRQ_Priority, uint8_t status); /*To do IRQ configuration*/
+void GPIO_IRQInterruptConfig(uint8_t IRQ_Number, uint8_t status); /*To do IRQ configuration*/
 void GPIO_IRQHandling(uint8_t PinNumber);
+void GPIO_IRQPriorityConfig(uint8_t IRQPriority);
 
 #endif /* INC_STM32F446XX_GPIO_H_ */
