@@ -9,6 +9,7 @@
 #define INC_STM32F446XX_SPI_H_
 
 #include "Stm32f446xx.h"
+#include "Stm32f446xx_Gpio.h"
 
 /*Configuration Structure for SPIx peripheral*/
 
@@ -18,9 +19,11 @@ typedef struct
 	uint8_t SPI_BusConfig;
 	uint8_t SPI_SclkSpeed;
 	uint8_t SPI_DFF;
+	uint8_t SPI_SPE;
 	uint8_t SPI_CPOL;
 	uint8_t SPI_CPHA;
 	uint8_t SPI_SSM;
+	uint8_t SPI_SSI;
 }SPI_Config_t;
 
 /*Handle Structure for SPIx peripheral*/
@@ -66,6 +69,12 @@ typedef struct
 /*
  * @CPOL
  */
+#define SPI_CPOL_HIGH     1
+#define SPI_CPOL_LOW      0
+
+/*
+ * @CPHA
+ */
 #define SPI_CPHA_HIGH     1
 #define SPI_CPHA_LOW      0
 
@@ -76,10 +85,17 @@ typedef struct
 #define SPI_SSM_DISABLE   0
 
 /*
+ * @SPI_SSI
+ */
+#define SPI_SSI_ENABLE    1
+#define SPI_SSI_DISABLE   0
+
+/*
  * SPI Related Status Flag definitions
  */
 #define SPI_TXE_FLAG     (1 << SPI_SR_TXE)
 #define SPI_RXNE_FLAG    (1 << SPI_SR_RXNE)
+#define SPI_BUSY_FLAG    (1 << SPI_SR_BSY)
 
 /*
  * Peripheral Clock Setup
@@ -104,6 +120,11 @@ void SPI_ReceiveData(SPI_RegDef_t *pSPIx, uint8_t *pRxBuffer, uint32_t Len);
 void SPI_IRQConfig(uint8_t IRQ_Number, uint8_t IRQ_Priority, uint8_t status); /*To do IRQ configuration*/
 void SPI_IRQPriorityConfig(uint8_t IRQNumber, uint32_t IRQPriority);
 void SPI_IRQHandling(SPI_Handle_t *pSPI_Handle_t);
+
+/*
+ * SPI Peripheral enable API
+ */
+void SPI_PerpheralControl(SPI_RegDef_t *pSPIx, uint8_t status);
 
 
 #endif /* INC_STM32F446XX_SPI_H_ */

@@ -4,7 +4,9 @@
  *  Created on: Mar 11, 2026
  *      Author: Aditya A Vilayatkar
  */
-
+#include "Stm32f446xx_Gpio.h"
+#include "Stm32f446xx_Spi.h"
+#include <stdlib.h>
 
 #ifndef INC_STM32F446XX_H_
 #define INC_STM32F446XX_H_
@@ -404,6 +406,9 @@ typedef struct
 #define SPI_CR1_CPOL     1
 #define SPI_CR1_MSTR     2
 #define SPI_CR1_RXONLY   10
+#define SPI_CR1_SPE      6
+#define SPI_CR1_SSM      9
+#define SPI_CR1_SSI      8
 #define SPI_CR1_DFF      11
 #define SPI_CR1_BIDI     15
 #define SPI_CR1_BR       3
