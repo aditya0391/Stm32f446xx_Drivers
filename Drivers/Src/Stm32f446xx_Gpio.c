@@ -102,6 +102,9 @@ void GPIO_Init(GPIO_Handle_t *pGPIO_Handle)
 	uint32_t temp = 0;
 	uint32_t temp3 = 0;
 	uint32_t temp4 = 0;
+
+	GPIO_PeriClkCtrl(pGPIO_Handle->pGPIOx, ENABLE);
+
 	//1. configure the mode of GPIO pin
     if(pGPIO_Handle->GPIO_PinConfig.GPIO_PinMode <= GPIO_MODE_ANALOG)
     {

@@ -59,6 +59,9 @@ void SPI_PeriClkCtrl(SPI_RegDef_t *pSPIx, uint8_t status)
  */
 void SPI_Init(SPI_Handle_t *pSPI_Handle_t)
 {
+
+	SPI_PeriClkCtrl(pSPI_Handle_t->pSPIx, ENABLE);
+
 	uint32_t temp = 0;  /*can be initialized as a whole register since only one register contains all the parameters*/
 	// 1. Configure Device Mode
 	temp |= pSPI_Handle_t->SPIConfig.SPI_DeviceMode << SPI_CR1_MSTR;
@@ -93,15 +96,8 @@ void SPI_Init(SPI_Handle_t *pSPI_Handle_t)
 	// 6. Configure the CPHA
 	temp |= (pSPI_Handle_t->SPIConfig.SPI_CPHA << SPI_CR1_CPHA);
 
-
-    // 7.Configure the SPE
-	temp |= (pSPI_Handle_t->SPIConfig.SPI_SPE << SPI_CR1_SPE);
-
-	// 8.Configure the SSM
+	// 7.Configure the SSM
 	temp |= (pSPI_Handle_t->SPIConfig.SPI_SSM << SPI_CR1_SSM);
-
-	// 9. Configure the SSI
-	temp |= (pSPI_Handle_t->SPIConfig.SPI_SSI << SPI_CR1_SSI);
 
     // Assigning the configuration
     pSPI_Handle_t->pSPIx->CR1 = temp;
@@ -206,6 +202,18 @@ void SPI_ReceiveData(SPI_RegDef_t *pSPIx, uint8_t *pRxBuffer, uint32_t Len)
 	    		pRxBuffer++;
 	    	}
 	    }
+	}
+}
+
+void SPI_SSIConfig(SPI_RegDef_t *pSPIx, uint8_t status)
+{
+	if (status == ENABLE)
+	{
+		pSPIx->CR1 |= (1 << SPI_CR1_SSI);
+	}
+	else
+	{
+		pSPIx->CR1 &= ~(1 << SPI_CR1_SSI);
 	}
 }
 

@@ -23,7 +23,6 @@ typedef struct
 	uint8_t SPI_CPOL;
 	uint8_t SPI_CPHA;
 	uint8_t SPI_SSM;
-	uint8_t SPI_SSI;
 }SPI_Config_t;
 
 /*Handle Structure for SPIx peripheral*/
@@ -135,6 +134,8 @@ void SPI_IRQHandling(SPI_Handle_t *pSPI_Handle_t);
  * SPI Peripheral enable API
  */
 void SPI_PerpheralControl(SPI_RegDef_t *pSPIx, uint8_t status);
+
+void SPI_SSIConfig(SPI_RegDef_t *pSPIx, uint8_t status);
 
 
 #endif /* INC_STM32F446XX_SPI_H_ */
