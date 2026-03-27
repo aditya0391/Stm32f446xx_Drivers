@@ -98,6 +98,16 @@ typedef struct
 #define SPI_BUSY_FLAG    (1 << SPI_SR_BSY)
 
 /*
+ * SPI RESET for de initialization
+ */
+
+#define SPI1_REG_RESET()       do{(RCC_REG->APB2RSTR |= (1 << 12)); (RCC_REG->APB2RSTR &= ~(1 << 12));}while(0)
+#define SPI2_REG_RESET()       do{(RCC_REG->APB1RSTR |= (1 << 14)); (RCC_REG->APB1RSTR &= ~(1 << 14));}while(0)
+#define SPI3_REG_RESET()       do{(RCC_REG->APB1RSTR |= (1 << 15)); (RCC_REG->APB1RSTR &= ~(1 << 15));}while(0)
+#define SPI4_REG_RESET()       do{(RCC_REG->APB2RSTR |= (1 << 13)); (RCC_REG->APB2RSTR &= ~(1 << 13));}while(0)
+
+
+/*
  * Peripheral Clock Setup
  */
 void SPI_PeriClkCtrl(SPI_RegDef_t *pSPIx, uint8_t status);
