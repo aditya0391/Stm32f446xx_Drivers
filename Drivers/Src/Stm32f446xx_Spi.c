@@ -197,12 +197,35 @@ void SPI_ReceiveData(SPI_RegDef_t *pSPIx, uint8_t *pRxBuffer, uint32_t Len)
 	    	}
 	    	else
 	    	{
-	    		pSPIx->DR = *pRxBuffer;
+	    		*pRxBuffer = pSPIx->DR;
 	    		Len--;
 	    		pRxBuffer++;
 	    	}
 	    }
 	}
+}
+
+void SPI_TransmitReceive(SPI_RegDef_t *pSPIx, uint8_t *pTxBuffer, uint8_t *pRxBuffer, uint32_t Len)
+{
+    while(Len > 0)
+    {
+        // 1. Wait until TXE is set
+        while(SPI_GetFlagStatus(pSPIx, SPI_TXE_FLAG) == FLAG_RESET);
+
+        // 2. Send data
+        pSPIx->DR = *pTxBuffer;
+
+        // 3. Wait until RXNE is set
+        while(SPI_GetFlagStatus(pSPIx, SPI_RXNE_FLAG) == FLAG_RESET);
+
+        // 4. Read received data
+        *pRxBuffer = (pSPIx->DR);
+
+        // 5. Move ahead
+        pTxBuffer++;
+        pRxBuffer++;
+        Len--;
+    }
 }
 
 void SPI_SSIConfig(SPI_RegDef_t *pSPIx, uint8_t status)
