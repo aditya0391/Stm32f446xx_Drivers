@@ -66,14 +66,13 @@ int main (void)
 {
 	uint8_t send_value = 15u;
 	uint8_t received_value = 0U;
-	GPIO_PeriClkCtrl(GPIOA, ENABLE);
 	GPIOA_Init();
-	SPI_PeriClkCtrl(SPI1, ENABLE);
+	GPIO_PeriClkCtrl(GPIOA, ENABLE);
 	SPI1_Init();
+	SPI_PeriClkCtrl(SPI1, ENABLE);
 	for(uint8_t i = 0; i < 5; i ++)
 	{
-	    SPI_SendData(SPI1, (uint8_t*)send_value, sizeof(send_value));
-	    SPI_ReceiveData(SPI1, (uint8_t*)received_value, sizeof(received_value));
+	    SPI_SendData(SPI1, &send_value, sizeof(send_value));
 	    if (i == 5)
 	    {
 	    	i = 0;
