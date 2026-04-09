@@ -6,6 +6,7 @@
  */
 
 #include "Stm32f446xx_Gpio.h"
+#include <string.h>
 #define LOW 0U
 #define BTN_PRESSED LOW
 
@@ -21,14 +22,21 @@ int main(void)
 	GPIO_Handle_t GpioBtn;
 	GPIO_Handle_t GpioLED;
 
+
+
+		memset(&GpioLED,0,sizeof(GpioLED));
+		memset(&GpioBtn,0,sizeof(GpioBtn));
+
 		GpioBtn.pGPIOx = GPIOC;
+		GpioLED.pGPIOx = GPIOA;
+
 		GpioBtn.GPIO_PinConfig.GPIO_PinNumber = GPIO_PIN_13;
-		GpioBtn.GPIO_PinConfig.GPIO_PinMode = GPIO_MODE_IT_RFT;
+		GpioBtn.GPIO_PinConfig.GPIO_PinMode = GPIO_MODE_IT_FT;
 		GpioBtn.GPIO_PinConfig.GPIO_PinSpeed = GPIO_SPEED_FAST;
-		GpioBtn.GPIO_PinConfig.GPIO_PinPuPdControl = GPIO_PU;
+		GpioBtn.GPIO_PinConfig.GPIO_PinPuPdControl = GPIO_NO_PUPD;
 		GPIO_Init(&GpioBtn);
 
-		GpioLED.pGPIOx = GPIOA;
+
 		GpioLED.GPIO_PinConfig.GPIO_PinNumber = GPIO_PIN_5;
 		GpioLED.GPIO_PinConfig.GPIO_PinMode = GPIO_MODE_OUT;
 		GpioLED.GPIO_PinConfig.GPIO_PinSpeed = GPIO_SPEED_FAST;
@@ -37,8 +45,10 @@ int main(void)
 
 		// IRQ Configurations
 
-		GPIO_IRQPriorityConfig(IRQ_NUMBER_EXTI15_10, IRQ_PRIO_10);
+
+		GPIO_IRQPriorityConfig(IRQ_NUMBER_EXTI15_10, IRQ_PRIORITY_EXTI15_10);
 		GPIO_IRQInterruptConfig(IRQ_NUMBER_EXTI15_10, ENABLE);
+
 
 //		while(1)
 //		    {
