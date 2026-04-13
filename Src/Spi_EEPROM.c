@@ -140,8 +140,11 @@ uint8_t flash_ReadByte(uint32_t addr, uint8_t transmit_data)
 
 int main (void)
 {
-    uint8_t transmit_data = 0xAB;
-    uint8_t received_data = 0;
+    char transmit_data[] = "Hello World";
+    uint8_t n = strlen(transmit_data);
+    char received_data[n];
+
+
 
     SPI_GPIOInits();
     SPI1_Inits();
@@ -151,7 +154,7 @@ int main (void)
 
     flash_WriteByte(0x00001000, transmit_data);
 
-    received_data = flash_ReadByte(0x00001000, transmit_data);
+    strcpy(received_data, flash_ReadByte(0x00001000, (uint8_t)transmit_data));
 
     return 0;
 }

@@ -58,8 +58,9 @@ void SPI1_Inits(void)
 
 int main (void)
 {
-	uint8_t user_data[5] = {1,3,5,7,9};
-	uint8_t received_data[5] ;
+	char sent_data[] = "Hello World";
+	int n = strlen(sent_data);
+	char received_data[n] ;
 	SPI_GPIOInits();
 
 	SPI1_Inits();
@@ -69,7 +70,7 @@ int main (void)
 	// enable the spi1 peripheral
 	SPI_PerpheralControl(SPI1, ENABLE);
 
-	SPI_TransmitReceive(SPI1, user_data, received_data, sizeof(user_data));
+	SPI_TransmitReceive(SPI1, (uint8_t*)sent_data, (uint8_t*)received_data, strlen(sent_data));
 
 	return 0;
 }

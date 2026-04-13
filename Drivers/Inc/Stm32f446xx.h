@@ -286,6 +286,22 @@ typedef struct
 #define IRQ_NUMBER_EXTI15_10     40
 
 /*
+ * IRQ Numbers for SPI Lines
+ */
+#define IRQ_NUMBER_SPI1      35
+#define IRQ_NUMBER_SPI2      36
+#define IRQ_NUMBER_SPI3      51
+#define IRQ_NUMBER_SPI4      84
+
+/*
+ * IRQ Priority for SPI Lines
+ */
+#define IRQ_PRIORITY_SPI1    42
+#define IRQ_PRIORITY_SPI2    43
+#define IRQ_PRIORITY_SPI3    58
+#define IRQ_PRIORITY_SPI4    91
+
+/*
  * IRQ Priority for EXTI Lines
  */
 
@@ -296,6 +312,24 @@ typedef struct
 #define IRQ_PRIORITY_EXTI4         17
 #define IRQ_PRIORITY_EXTI9_5       30
 #define IRQ_PRIORITY_EXTI15_10     47
+
+#define IRQ_PRIO_0                 0
+#define IRQ_PRIO_1                 1
+#define IRQ_PRIO_2                 2
+#define IRQ_PRIO_3                 3
+#define IRQ_PRIO_4                 4
+#define IRQ_PRIO_5                 5
+#define IRQ_PRIO_6                 6
+#define IRQ_PRIO_7                 7
+#define IRQ_PRIO_8                 8
+#define IRQ_PRIO_9                 9
+#define IRQ_PRIO_10                10
+#define IRQ_PRIO_11                11
+#define IRQ_PRIO_12                12
+#define IRQ_PRIO_13                13
+#define IRQ_PRIO_14                14
+#define IRQ_PRIO_15                15
+#define IRQ_PRIO_47                47
 
 /*
  *  Clock Disable Macros for GPIOx Peripheral
@@ -376,13 +410,13 @@ typedef struct
  * Clock Enable Macros for SYSCFG peripheral
  */
 
-#define SYSCFG_CLK_EN()     ( RCC_REG->APB1ENR |= (1 << 14))
+#define SYSCFG_CLK_EN()     ( RCC_REG->APB2ENR |= (1 << 14))
 
 /*
  * Clock Enable Macros for SYSCFG peripheral
  */
 
-#define SYSCFG_CLK_DIS()     ( RCC_REG->APB1ENR &= ~(1 << 14))
+#define SYSCFG_CLK_DIS()     ( RCC_REG->APB2ENR &= ~(1 << 14))
 
 /*
  * Register Reset needs to be set and then reset
@@ -420,6 +454,7 @@ typedef struct
 
 #define SPI_SR_RXNE       0
 #define SPI_SR_TXE        1
+#define SPI_SR_BSY        7
 #define SPI_CHSIDE        2
 #define SPI_UDR           3
 

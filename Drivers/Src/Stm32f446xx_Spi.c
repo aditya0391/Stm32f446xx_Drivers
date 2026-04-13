@@ -143,7 +143,7 @@ void SPI_SendData(SPI_RegDef_t *pSPIx, uint8_t *pTxBuffer, uint32_t Len)
     while (Len > 0)
     {
     	// Wait until TXE is set
-    	while(SPI_GetFlagStatus(pSPIx, SPI_TXE_FLAG) == FLAG_RESET);
+    	while(SPI_GetFlagStatus(pSPIx, SPI_TXE_FLAG) == FLAG_RESET)
     	{
     		//Do nothing
     	}
@@ -258,3 +258,40 @@ void SPI_IRQHandling(SPI_Handle_t *pSPI_Handle_t)
 {
 
 }
+
+
+/*
+ * SPI_ReceiveData() with wait for TXNE flag and sending Dummy data
+ *
+ * void SPI_ReceiveData(SPI_RegDef_t *pSPIx, uint8_t *pRxBuffer, uint32_t Len)
+{
+    while (Len > 0)
+    {
+        // 1. Wait until TXE is set
+        while(SPI_GetFlagStatus(pSPIx, SPI_TXE_FLAG) == FLAG_RESET);
+
+        // 2. Send dummy byte to generate clock
+        pSPIx->DR = 0xFF;
+
+        // 3. Wait until RXNE is set
+        while(SPI_GetFlagStatus(pSPIx, SPI_RXNE_FLAG) == FLAG_RESET);
+
+        // 4. Read data
+        if (pSPIx->CR1 & (1 << SPI_CR1_DFF))
+        {
+            *((uint16_t*)pRxBuffer) = (uint16_t)pSPIx->DR;
+            Len -= 2;
+            pRxBuffer += 2;
+        }
+        else
+        {
+            *pRxBuffer = (uint8_t)pSPIx->DR;
+            Len--;
+            pRxBuffer++;
+        }
+    }
+}
+*
+*
+*
+ */

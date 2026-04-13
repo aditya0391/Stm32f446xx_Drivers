@@ -103,6 +103,8 @@ void GPIO_Init(GPIO_Handle_t *pGPIO_Handle)
 	uint32_t temp3 = 0;
 	uint32_t temp4 = 0;
 
+
+
 	GPIO_PeriClkCtrl(pGPIO_Handle->pGPIOx, ENABLE);
 
 	//1. configure the mode of GPIO pin
@@ -139,14 +141,17 @@ void GPIO_Init(GPIO_Handle_t *pGPIO_Handle)
     		EXTI->FTSR |=  (1 << pGPIO_Handle->GPIO_PinConfig.GPIO_PinNumber);
     	}
     	// configure the GPIO Port selection in SYSCFG_EXTICR
-    	SYSCFG_CLK_EN();
+
     	temp3 = pGPIO_Handle->GPIO_PinConfig.GPIO_PinNumber / 4;
     	temp4 = pGPIO_Handle->GPIO_PinConfig.GPIO_PinNumber % 4;
-    	SYSCFG->EXTICR[temp3] = 1 << (temp4 * 4);
+
+
+    	SYSCFG_CLK_EN(); /*Enabled clock for SYSCFG Register */
 
     	uint8_t portcode = GPIOxPORT(pGPIO_Handle->pGPIOx);
+    	SYSCFG->EXTICR[temp3] |= portcode << (temp4 * 4);
     	//enable the EXTI interrupt delivery using IMR Interrupt Mask Register
-    	EXTI->IMR |= (portcode << pGPIO_Handle->GPIO_PinConfig.GPIO_PinNumber);
+    	EXTI->IMR |= (1 << pGPIO_Handle->GPIO_PinConfig.GPIO_PinNumber);
     }
     temp = 0;
 
@@ -256,6 +261,10 @@ void GPIO_ToggleOutputPin(GPIO_RegDef_t *pGPIOx, uint8_t PinNumber)
 	pGPIOx->ODR ^= (1 << PinNumber);
 }
 
+/*
+ *  Configuring Interrupts for GPIO - Start
+ */
+
 void GPIO_IRQInterruptConfig(uint8_t IRQ_Number, uint8_t status) /*To do IRQ configuration*/
 {
     if(status == ENABLE)
@@ -297,18 +306,27 @@ void GPIO_IRQInterruptConfig(uint8_t IRQ_Number, uint8_t status) /*To do IRQ con
     }
 }
 
-void GPIO_IRQPriorityConfig(uint8_t IRQPriority)
+void GPIO_IRQPriorityConfig(uint8_t IRQNumber, uint32_t IRQPriority)
 {
-    uint8_t iprx = IRQPriority / 4;
-    uint8_t iprx_section = IRQPriority % 4;
+    uint8_t iprx = IRQNumber / 4;
+    uint8_t iprx_section = IRQNumber % 4;
     uint8_t shift_amount = (iprx_section * 8) + (8 - NO_PR_BITS_IMPLEMENTED);
     *(NVIC_IPR + (iprx * 4)) |= IRQPriority << shift_amount ;
 }
+
+
+
+
 void GPIO_IRQHandling(uint8_t PinNumber) /*To do IRQ Handling*/
 {
-	//Clear the EXTI Pending Register corresponding to the pin number
+	//Clear the EXTI Pending Register corresponding to the pin number, by writing 1 to the register
     if (EXTI->PR & (1 << PinNumber))
     {
     	EXTI->PR |= (1 << PinNumber);
     }
 }
+
+
+/*
+ *  Configuring Interrupts for GPIO - End
+ */
