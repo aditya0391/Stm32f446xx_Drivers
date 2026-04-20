@@ -119,6 +119,11 @@
 #define EXTI_BASEADDR         (APB2PERIPH_BASEADDR + 0x3C00)
 #define SYSCFG_BASEADDR       (APB2PERIPH_BASEADDR + 0x3800)
 
+#define TIM1_BASEADDR         (APB2PERIPH_BASEADDR + 0x0000)
+#define TIM8_BASEADDR         (APB2PERIPH_BASEADDR + 0x0400)
+#define TIM9_BASEADDR         (APB2PERIPH_BASEADDR + 0x4000)
+#define TIM10_BASEADDR        (APB2PERIPH_BASEADDR + 0x4400)
+#define TIM11_BASEADDR        (APB2PERIPH_BASEADDR + 0x4800)
 
 /*Peripheral Register definition structure*/
 
@@ -149,6 +154,28 @@ typedef struct
 	volatile uint32_t I2SPR;            /*SPI_I2S Prescaler register*/
 }SPI_RegDef_t;
 
+
+typedef struct
+{
+	volatile uint16_t CR1;              /*TIM9/12 control register 1*/
+	volatile uint16_t SMCR;             /*TIM9/12 slave mode control register*/
+	volatile uint16_t DIER;             /*TIM9/12 Interrupt enable register*/
+	volatile uint16_t SR;               /*TIM9/12 status register*/
+	volatile uint16_t EGR;              /*TIM9/12 event generation register*/
+	volatile uint16_t CCMR1;            /*TIM9/12 capture/compare mode register 1*/
+	volatile uint16_t RES1;             /*Reserved*/
+	volatile uint16_t TIMx_CCER;        /*TIM9/12 capture/compare enable register*/
+	volatile uint16_t CNT;              /*TIM9/12 counter*/
+	volatile uint16_t PSC;              /*TIM9/12 prescaler*/
+	volatile uint16_t ARR;              /*TIM9/12 auto-reload register*/
+	volatile uint16_t RES2;             /*Reserved*/
+	volatile uint16_t CCR1;             /*TIM9/12 capture/compare register 1*/
+	volatile uint16_t CCR2;             /*TIM9/12 capture/compare register 2*/
+	volatile uint16_t RES3;             /*Reserved*/
+}TIM9_12_RegDef_t;
+
+
+#define TIM9    ((TIM9_12_RegDef_t*) TIM9_BASEADDR)
 
 /*SPI Registers*/
 #define SPI1    ((SPI_RegDef_t*) SPI1_BASEADDR)
@@ -417,6 +444,13 @@ typedef struct
  */
 
 #define SYSCFG_CLK_DIS()     ( RCC_REG->APB2ENR &= ~(1 << 14))
+
+
+/*
+ * TIMx Clock Enable Macros
+ */
+
+#define TIM9_CLK_EN()        ( RCC_REG->APB2ENR |= (1 << 16))
 
 /*
  * Register Reset needs to be set and then reset

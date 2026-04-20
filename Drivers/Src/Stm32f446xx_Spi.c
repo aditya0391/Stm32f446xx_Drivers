@@ -241,6 +241,18 @@ void SPI_SSIConfig(SPI_RegDef_t *pSPIx, uint8_t status)
 	}
 }
 
+void SPI_SendData_IT(SPI_Handle_t *pSPI_Handle_t, uint8_t *pTxBuffer, uint32_t Len)
+{
+
+}
+
+void SPI_ReceiveData_IT(SPI_Handle_t *pSPI_Handle_t, uint8_t *pRxBuffer, uint32_t Len)
+{
+
+}
+
+
+
 /*
  * IRQ Configuration and IRQ Handling
  */
