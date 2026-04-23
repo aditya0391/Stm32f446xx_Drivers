@@ -6,6 +6,7 @@
  */
 #include "Stm32f446xx_Gpio.h"
 #include "Stm32f446xx_Spi.h"
+#include "Stm32f446xx_Pwm.h"
 #include <stdlib.h>
 
 #ifndef INC_STM32F446XX_H_
