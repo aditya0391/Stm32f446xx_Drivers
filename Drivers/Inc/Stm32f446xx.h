@@ -125,6 +125,11 @@
 #define TIM10_BASEADDR        (APB2PERIPH_BASEADDR + 0x4400)
 #define TIM11_BASEADDR        (APB2PERIPH_BASEADDR + 0x4800)
 
+/* Basic Timers */
+
+#define TIM6_BASEADDR         (APB1PERIPH_BASEADDR + 0x1000)
+#define TIM7_BASEADDR         (APB1PERIPH_BASEADDR + 0x1400)
+
 /*Peripheral Register definition structure*/
 
 typedef struct
@@ -175,6 +180,21 @@ typedef struct
 }TIM9_12_RegDef_t;
 
 
+typedef struct
+{
+	volatile uint32_t CR1;
+	volatile uint32_t CR2;
+	volatile uint32_t RES1;
+	volatile uint32_t DIER;
+	volatile uint32_t SR;
+	volatile uint32_t EGR;
+	volatile uint32_t RES2[3];
+	volatile uint32_t CNT;
+	volatile uint32_t PSC;
+	volatile uint32_t ARR;
+}TIM6_7_Regdef_t;
+
+#define TIM6    ((TIM6_7_Regdef_t*) TIM6_BASEADDR)
 #define TIM9    ((TIM9_12_RegDef_t*) TIM9_BASEADDR)
 
 /*SPI Registers*/
@@ -451,6 +471,7 @@ typedef struct
  */
 
 #define TIM9_CLK_EN()        ( RCC_REG->APB2ENR |= (1 << 16))
+#define TIM6_CLK_EN()        ( RCC_REG->APB1ENR |= (1 << 4))
 
 /*
  * Register Reset needs to be set and then reset
